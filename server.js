@@ -24,13 +24,13 @@ var isbns = [9780156012195, 9780743273565, 9780435905484, 9780140275360, 9780756
 var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
 
 for (var i = 0; i < isbns.length; i++) {
-  var apiURL = url + isbns[i];
+  var apiURL = url + isbns[i]; 
   /*=====================================================
   the first time you run your code, uncomment the function below.
   for subsequent runs, re-comment it so that it runs only once!
   that said, there is a fail-safe to avoid duplicates below
   =======================================================*/
-  loadFromAPI(apiURL)
+  /*  loadFromAPI(apiURL) */
 }
 console.log("done");
 
@@ -60,7 +60,7 @@ function loadFromAPI(apiURL) {
     }
   })
 }
-
+ 
 
 /*=====================================================
 Create People Collection
@@ -97,7 +97,7 @@ var getKids = function(numKids) {
     })
   }
   return kids;
-}
+} 
 
 
 /*=====================================================
@@ -108,10 +108,10 @@ adds new people and their kids until you do have 100
 try to understand how this code works
 could you write it differently?
 =======================================================*/
-Person.find({}).count(function(err, count) {
+ Person.find({}).count(function(err, count) { 
   // the below two loops could be changed to a simple:
   // for (var i = count; i < 100; i++) {}
-  if (count < 100) {
+ if (count < 100) {
     for (var i = 0; i < 100 - count; i++) {
       var numKids = getNumKids();
       var p = new Person({
@@ -126,7 +126,7 @@ Person.find({}).count(function(err, count) {
       p.save();
     }
   }
-})
+}) 
 
 
 /*=====================================================
@@ -150,20 +150,38 @@ and your server is running do the following:
 /*Books
 ----------------------*/
 //1. Find books with fewer than 500 but more than 200 pages
+/* Book.find({$and:[{pages:{$lt:500}}, {pages:{$gte:200}}]},function (err,docs){
+  console.log(docs)
+
+} ) */
+
+
 
 //2. Find books whose rating is less than 5, and sort by the author's name
-
+   /*  Book.find({rating:{"$lt":5}}).sort({author:-1}).exec(function(err,docs){
+   console.log(docs)
+   }) */
 //3. Find all the Fiction books, skip the first 2, and display only 3 of them
-
+/* Book.find({genres:"Fiction"}).skip(2).limit(3).exec(function(err,docs){
+  console.log(docs)
+  }) */
 
 /*People
 ----------------------*/
 //1. Find all the people who are tall (>180) AND rich (>30000)
-
+/* Person.find({$and:[{ height:{$gt:180}}, {salary:{$gte:30000}}]}).count().exec(function (err,docs){
+  console.log(docs)}) */
 //2. Find all the people who are tall (>180) OR rich (>30000)
-
+/* Person.find({$or:[{ height:{$gt:180}}, {salary:{$gte:30000}}]}).count().exec(function (err,docs){
+  console.log(docs)}) */
 //3. Find all the people who have grey hair or eyes, and are skinny (<70)
+/* Person.find({$and:[{$or:[{ hair:"grey"},{eyes:"grey"}]},{weight:{$lt:70}}]}).exec(function (err,docs){
+  console.log(docs)}) */
 
 //4. Find people who have at least 1 kid with grey hair
-
+/* Person.find({kids:{$elemMatch:{hair:"grey"}}}).exec(function (err,docs){
+  console.log(docs)}) */
 //5. Find all the people who have at least one overweight kid, and are overweight themselves (>100)
+/* Person.find({$and:[{kids:{$elemMatch:{weight:{$gt:100}}}},{weight:{$gt:100}}]}).exec(function(err,docs){
+  console.log(docs)
+}) */
